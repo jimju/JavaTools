@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_jimproject" default="compile.module.jimproject">
+  <dirname property="module.jimproject.basedir" file="${ant.file.module_jimproject}"/>
+  
+  <property name="module.jdk.home.jimproject" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.jimproject" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.jimproject" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.jimproject" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="jimproject.output.dir" value="${module.jimproject.basedir}/out/production/JimProject"/>
+  <property name="jimproject.testoutput.dir" value="${module.jimproject.basedir}/out/test/JimProject"/>
+  
+  <path id="jimproject.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="jimproject.module.production.classpath">
+    <path refid="${module.jdk.classpath.jimproject}"/>
+  </path>
+  
+  <path id="jimproject.runtime.production.module.classpath">
+    <pathelement location="${jimproject.output.dir}"/>
+  </path>
+  
+  <path id="jimproject.module.classpath">
+    <path refid="${module.jdk.classpath.jimproject}"/>
+    <pathelement location="${jimproject.output.dir}"/>
+  </path>
+  
+  <path id="jimproject.runtime.module.classpath">
+    <pathelement location="${jimproject.testoutput.dir}"/>
+    <pathelement location="${jimproject.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.jimproject">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.jimproject">
+    <patternset refid="excluded.from.module.jimproject"/>
+  </patternset>
+  
+  <path id="jimproject.module.sourcepath">
+    <dirset dir="${module.jimproject.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.jimproject" depends="compile.module.jimproject.production,compile.module.jimproject.tests" description="Compile module JimProject"/>
+  
+  <target name="compile.module.jimproject.production" depends="register.custom.compilers" description="Compile module JimProject; production classes">
+    <mkdir dir="${jimproject.output.dir}"/>
+    <javac2 destdir="${jimproject.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jimproject}/javac">
+      <compilerarg line="${compiler.args.jimproject}"/>
+      <bootclasspath refid="jimproject.module.bootclasspath"/>
+      <classpath refid="jimproject.module.production.classpath"/>
+      <src refid="jimproject.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jimproject"/>
+    </javac2>
+    
+    <copy todir="${jimproject.output.dir}">
+      <fileset dir="${module.jimproject.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.jimproject.tests" depends="register.custom.compilers,compile.module.jimproject.production" description="compile module JimProject; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.jimproject" description="cleanup module">
+    <delete dir="${jimproject.output.dir}"/>
+    <delete dir="${jimproject.testoutput.dir}"/>
+  </target>
+</project>
