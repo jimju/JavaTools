@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact name="JimProject:jar">
-    <output-path>$PROJECT_DIR$/../../artifacts/JimProject_jar</output-path>
+    <output-path>E:/artifacts/JimProject_jar</output-path>
     <root id="root">
       <element id="archive" name="JimProject.jar">
         <element id="module-output" name="JimProject" />
